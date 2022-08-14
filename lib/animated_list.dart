@@ -21,13 +21,13 @@ class _AnimatedListPageState extends State<AnimatedListPage> {
 
   void _addItemToList() async {
     List<String> lists = [
-      'Satish',
-      'Krishav',
-      'Neha',
-      'Papa',
-      'Mummy',
-      'Bhai',
-      'Bhabhi'
+      'Item One',
+      'Item Two',
+      'Item Three',
+      'Item Four',
+      'Item Five',
+      'Item Six',
+      'Item Seven'
     ];
     for (var element in lists) {
       await Future.delayed(const Duration(milliseconds: 100));
