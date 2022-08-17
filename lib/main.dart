@@ -19,7 +19,13 @@ class MyApp extends StatelessWidget {
       ),
       home: BlocProvider(
         create: (context) => CounterCubit(),
-        child: const QuantityPage(),
+        child: const QuantityPage(
+          leftIcon: Icons.remove,
+          rightIcon: Icons.add,
+          title: 'Container Selection',
+          quanitityMinLimit: 10,
+          quanitityMaxLimit: 99,
+        ),
       ),
     );
   }
