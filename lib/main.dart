@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_anime/animated_list.dart';
-import 'package:my_anime/infinite_scroll_list.dart';
-import 'package:my_anime/search_page.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_anime/quantity.dart';
+import 'package:my_anime/quantity_widget/quantity_cubit.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +17,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.pink,
       ),
-      home: const SearchPage(),
+      home: BlocProvider(
+        create: (context) => CounterCubit(),
+        child: const QuantityPage(),
+      ),
     );
   }
 }
