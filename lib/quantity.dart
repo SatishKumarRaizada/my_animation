@@ -8,6 +8,7 @@ class QuantityPage extends StatefulWidget {
   final IconData? rightIcon;
   final int? quanitityMaxLimit;
   final int? quanitityMinLimit;
+  final Function? quantityFetch;
 
   const QuantityPage({
     Key? key,
@@ -16,6 +17,7 @@ class QuantityPage extends StatefulWidget {
     this.quanitityMinLimit,
     this.quanitityMaxLimit,
     this.title,
+    this.quantityFetch,
   }) : super(key: key);
   @override
   State<QuantityPage> createState() => _QuantityPageState();
@@ -23,7 +25,7 @@ class QuantityPage extends StatefulWidget {
 
 class _QuantityPageState extends State<QuantityPage> {
   final quanltityCtrl = TextEditingController();
-  final counterCubit = CounterCubit();
+  final cubit = CounterCubit();
 
   @override
   void initState() {
@@ -42,68 +44,76 @@ class _QuantityPageState extends State<QuantityPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(widget.title!),
-            const SizedBox(height: 30),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                OutlinedButton(
-                  child: Icon(widget.leftIcon),
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    if (int.parse(quanltityCtrl.text.trim()) > widget.quanitityMinLimit!) {
-                      context.read<CounterCubit>().decrement();
-                    }
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(widget.title!),
+          const SizedBox(height: 30),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              OutlinedButton(
+                child: Icon(widget.leftIcon),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  if (int.parse(quanltityCtrl.text.trim()) > widget.quanitityMinLimit!) {
+                    context.read<CounterCubit>().decrement();
+                  }
+                },
+              ),
+              SizedBox(
+                width: 200,
+                child: BlocBuilder<CounterCubit, int>(
+                  builder: (_, count) {
+                    quanltityCtrl.text = count.toString();
+                    return TextField(
+                      controller: quanltityCtrl,
+                      maxLength: widget.quanitityMaxLimit.toString().length,
+                      keyboardType: TextInputType.number,
+                      textAlign: TextAlign.center,
+                      decoration: const InputDecoration(
+                        counterText: '',
+                      ),
+                      onChanged: (String str) {
+                        final minValue = widget.quanitityMinLimit;
+                        if (str.trim().isNotEmpty && int.parse(str.trim()) > minValue!) {
+                          final count = int.parse(str);
+                          context.read<CounterCubit>().counter(count);
+                        } else {
+                          quanltityCtrl.text = '$minValue';
+                          context.read<CounterCubit>().counter(minValue!);
+                        }
+                      },
+                    );
                   },
                 ),
-                SizedBox(
-                  width: 200,
-                  child: BlocBuilder<CounterCubit, int>(
-                    builder: (_, count) {
-                      quanltityCtrl.text = count.toString();
-                      return TextField(
-                        controller: quanltityCtrl,
-                        maxLength: widget.quanitityMaxLimit.toString().length,
-                        keyboardType: TextInputType.number,
-                        textAlign: TextAlign.center,
-                        decoration: const InputDecoration(
-                          counterText: '',
-                        ),
-                        onChanged: (String str) {
-                          final minValue = widget.quanitityMinLimit;
-                          if (str.trim().isNotEmpty && int.parse(str.trim()) > minValue!) {
-                            final count = int.parse(str);
-                            context.read<CounterCubit>().counter(count);
-                          } else {
-                            quanltityCtrl.text = '$minValue';
-                            context.read<CounterCubit>().counter(minValue!);
-                          }
-                        },
-                      );
-                    },
-                  ),
-                ),
-                OutlinedButton(
-                  child: Icon(widget.rightIcon),
-                  onPressed: () {
-                    FocusScope.of(context).unfocus();
-                    if (int.parse(quanltityCtrl.text.trim()) < 99) {
-                      context.read<CounterCubit>().increment();
-                    }
-                  },
-                ),
-              ],
-            ),
-          ],
-        ),
+              ),
+              OutlinedButton(
+                child: Icon(widget.rightIcon),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  if (int.parse(quanltityCtrl.text.trim()) < 99) {
+                    context.read<CounterCubit>().increment();
+                  }
+                },
+              ),
+            ],
+          ),
+          TextButton(
+            onPressed: () {
+              final data = context.read<CounterCubit>().counterState();
+              print('data');
+            },
+            child: const Text('Get Quantities'),
+          ),
+        ],
       ),
     );
+  }
+
+  int? getQuantity() {
+    return context.read<CounterCubit>().counterState();
   }
 }
