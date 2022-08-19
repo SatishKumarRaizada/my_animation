@@ -13,6 +13,7 @@ class QuantityPageCounter extends StatefulWidget {
 
 class _QuantityPageCounterState extends State<QuantityPageCounter> {
   final cubit = CounterCubit();
+  final quanltityCtrl = TextEditingController();
   //
   @override
   Widget build(BuildContext context) {
@@ -31,18 +32,16 @@ class _QuantityPageCounterState extends State<QuantityPageCounter> {
                   title: 'Container Selection',
                   quanitityMinLimit: 10,
                   quanitityMaxLimit: 99,
-                  quantityFetch: (int? count) {
-                    print(count);
-                  },
+                  quanltityCtrl: quanltityCtrl,
                 ),
               ),
               const SizedBox(height: 30),
               TextButton(
                 onPressed: () {
-                  final data = cubit.counterState();
-                  print('data');
+                  final data = quanltityCtrl.text;
+                  print(quanltityCtrl.text);
                 },
-                child: const Text('Get Quantity'),
+                child: const Text('Get Satish'),
               ),
             ],
           ),

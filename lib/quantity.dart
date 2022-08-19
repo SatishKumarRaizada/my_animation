@@ -8,8 +8,7 @@ class QuantityPage extends StatefulWidget {
   final IconData? rightIcon;
   final int? quanitityMaxLimit;
   final int? quanitityMinLimit;
-  final Function? quantityFetch;
-
+  final TextEditingController? quanltityCtrl;
   const QuantityPage({
     Key? key,
     this.leftIcon,
@@ -17,29 +16,26 @@ class QuantityPage extends StatefulWidget {
     this.quanitityMinLimit,
     this.quanitityMaxLimit,
     this.title,
-    this.quantityFetch,
+    this.quanltityCtrl,
   }) : super(key: key);
   @override
   State<QuantityPage> createState() => _QuantityPageState();
 }
 
 class _QuantityPageState extends State<QuantityPage> {
-  final quanltityCtrl = TextEditingController();
-  final cubit = CounterCubit();
-
   @override
   void initState() {
     super.initState();
-    quanltityCtrl.addListener(() {
-      final text = quanltityCtrl.text.toLowerCase();
-      quanltityCtrl.value = quanltityCtrl.value.copyWith(
+    widget.quanltityCtrl!.addListener(() {
+      final text = widget.quanltityCtrl!.text.toLowerCase();
+      widget.quanltityCtrl!.value = widget.quanltityCtrl!.value.copyWith(
         text: text,
         selection: TextSelection(baseOffset: text.length, extentOffset: text.length),
         composing: TextRange.empty,
       );
     });
     context.read<CounterCubit>().counter(widget.quanitityMinLimit!);
-    quanltityCtrl.text = '${widget.quanitityMinLimit}';
+    widget.quanltityCtrl!.text = '${widget.quanitityMinLimit}';
   }
 
   @override
@@ -58,7 +54,7 @@ class _QuantityPageState extends State<QuantityPage> {
                 child: Icon(widget.leftIcon),
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  if (int.parse(quanltityCtrl.text.trim()) > widget.quanitityMinLimit!) {
+                  if (int.parse(widget.quanltityCtrl!.text.trim()) > widget.quanitityMinLimit!) {
                     context.read<CounterCubit>().decrement();
                   }
                 },
@@ -67,9 +63,9 @@ class _QuantityPageState extends State<QuantityPage> {
                 width: 200,
                 child: BlocBuilder<CounterCubit, int>(
                   builder: (_, count) {
-                    quanltityCtrl.text = count.toString();
+                    widget.quanltityCtrl!.text = count.toString();
                     return TextField(
-                      controller: quanltityCtrl,
+                      controller: widget.quanltityCtrl!,
                       maxLength: widget.quanitityMaxLimit.toString().length,
                       keyboardType: TextInputType.number,
                       textAlign: TextAlign.center,
@@ -82,7 +78,7 @@ class _QuantityPageState extends State<QuantityPage> {
                           final count = int.parse(str);
                           context.read<CounterCubit>().counter(count);
                         } else {
-                          quanltityCtrl.text = '$minValue';
+                          widget.quanltityCtrl!.text = '$minValue';
                           context.read<CounterCubit>().counter(minValue!);
                         }
                       },
@@ -94,7 +90,7 @@ class _QuantityPageState extends State<QuantityPage> {
                 child: Icon(widget.rightIcon),
                 onPressed: () {
                   FocusScope.of(context).unfocus();
-                  if (int.parse(quanltityCtrl.text.trim()) < 99) {
+                  if (int.parse(widget.quanltityCtrl!.text.trim()) < 99) {
                     context.read<CounterCubit>().increment();
                   }
                 },
@@ -103,8 +99,8 @@ class _QuantityPageState extends State<QuantityPage> {
           ),
           TextButton(
             onPressed: () {
-              final data = context.read<CounterCubit>().counterState();
-              print('data');
+              final data = widget.quanltityCtrl!.text.trim();
+              print(data);
             },
             child: const Text('Get Quantities'),
           ),
